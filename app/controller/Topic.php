@@ -16,6 +16,12 @@ class Topic extends BaseController
     public function index()
     {
         //获取所有的分类
+        $data = \app\model\Topic::field(['id','topic'])->select();
+        if ($data->isEmpty()){
+            $this->return_msg([],'请求失败',400);
+        }else{
+            $this->return_msg($data,'请求成功',200);
+        }
 
     }
 
@@ -38,7 +44,7 @@ class Topic extends BaseController
      */
     public function read($id)
     {
-        //
+
     }
 
     /**
