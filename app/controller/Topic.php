@@ -33,7 +33,7 @@ class Topic extends BaseController
      */
     public function save(Request $request)
     {
-        //
+
     }
 
     /**

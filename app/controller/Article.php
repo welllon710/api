@@ -5,7 +5,7 @@ namespace app\controller;
 
 use app\BaseController;
 use think\Request;
-
+use app\model\Article as ArticleModel;
 class Article extends BaseController
 {
     protected $field = ['id','title','desc','tags','content','is_top'];
@@ -33,7 +33,18 @@ class Article extends BaseController
      */
     public function save(Request $request)
     {
-        //
+        $data = $request->param();
+      //  $this->return_msg($data,'请求成功',200);
+        $article = new ArticleModel();
+        $res = $article->add($data);
+        if ($res === 1){
+            $this->return_msg($data,'请求成功',200);
+        }else{
+            $this->return_msg($data,$res,400);
+
+
+
+        }
     }
 
     /**
