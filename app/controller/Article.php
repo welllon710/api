@@ -33,8 +33,17 @@ class Article extends BaseController
      */
     public function save(Request $request)
     {
-        $data = $request->param();
+      //  $data = $request->param();
       //  $this->return_msg($data,'请求成功',200);
+        $data = [
+            'title'=>input('post.title'),
+            'desc'=>input('post.desc'),
+            'tags'=>input('post.tags'),
+            'content'=>input('post.content'),
+            'is_top'=>input('is_top')?'1':'0',
+            'cate_id'=>input('cate_id')
+        ];
+       $data['cate_id'] = \app\model\Cate::where('catename',$data['cate_id'])->value('id');
         $article = new ArticleModel();
         $res = $article->add($data);
         if ($res === 1){
