@@ -21,4 +21,7 @@ class Article extends Model
             return '添加失败';
         }
     }
+    public function getCreateTimeAttr($value){ //获取器转好为时间戳
+        return strtotime($value);
+    }
 }
