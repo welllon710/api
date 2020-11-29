@@ -28,7 +28,13 @@ class Article extends Validate
      *
      * @var array
      */
-    protected $message = [];
+    protected $message = [
+        'title.require'=>'标题不能为空',
+        'desc.require'=>'概要不能为空',
+        'tags.require'=>'标签不能为空',
+        'content.require'=>'内容不能为空',
+        'cate_id'=>'分类不能为空',
+    ];
     protected $scene = [
         'add'=>['title','desc','tags','content','is_top','cate_id'],
         'edit'=>['title','desc','tags','content','is_top','cate_id']

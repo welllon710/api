@@ -19,7 +19,7 @@ Route::group('api',function (){
    //登录
  //   Route::rule('login','User/login','post');
     //获取分类
-    Route::rule('cate','Cate/get_cate','get');
+    Route::rule('cate','Cate/index','get');
     //文章
     Route::resource('article','Article');
     Route::rule('articles/detail','Article/detail','get'); //进入文章详情

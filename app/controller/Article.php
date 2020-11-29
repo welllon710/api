@@ -4,22 +4,16 @@ declare (strict_types = 1);
 namespace app\controller;
 
 use app\BaseController;
-use think\App;
-use think\facade\Cache;
 use think\Request;
 use app\model\Article as ArticleModel;
 class Article extends BaseController
 {
-    protected $field = ['id','title','desc','tags','content','is_top','create_time'];
-
+    protected $field = ['id','title','desc','tags','content','is_top'];
     /**
      * 显示资源列表
      *
      * @return \think\Response
      */
-
-
-
     public function index()
     {
         $data = \app\model\Article::field($this->field)->paginate($this->page_size,false);
@@ -39,9 +33,17 @@ class Article extends BaseController
      */
     public function save(Request $request)
     {
-        $data = $request->param();
+      //  $data = $request->param();
       //  $this->return_msg($data,'请求成功',200);
-        $data['cate_id'] = \app\model\Cate::where('catename',$data['cate_id'])->value('id');
+        $data = [
+            'title'=>input('post.title'),
+            'desc'=>input('post.desc'),
+            'tags'=>input('post.tags'),
+            'content'=>input('post.content'),
+            'is_top'=>input('is_top')?'1':'0',
+            'cate_id'=>input('cate_id')
+        ];
+       $data['cate_id'] = \app\model\Cate::where('catename',$data['cate_id'])->value('id');
         $article = new ArticleModel();
         $res = $article->add($data);
         if ($res === 1){
@@ -49,38 +51,11 @@ class Article extends BaseController
         }else{
             $this->return_msg($data,$res,400);
 
-        }
-    }
-    public function detail(){
-        //问题、第二次发起请求，会覆盖第一次的参数
-        $this->id = input('uid');
-        $goin_time = input('time');//进去页面的时间戳
-        cache('goin',$goin_time);
-        $data = ArticleModel::where('id', $this->id)->find();
-          if ($data->isEmpty()){
-              $this->return_msg([],'请求失败',400);
-          }else{
-              $this->return_msg($data,'请求成功',200);
-          }
 
-    }
-    public function leavedetail(){
-        $leave = input('leavetime');
-        $uid = input('uid');
-        \cache('leavetime',$leave);
-    //  dd(\cache('goin'),\cache('leavetime'));
-        $diff = Cache::pull('leavetime') - Cache::pull('goin');
-        if ($diff >= 30){
-            $data = ArticleModel::where('id', $uid)->find();
-            $data->is_read = 1;
-            $read = $data->save();
-            if ($read){
-                $this->return_msg([],'阅读量+1',200);
-            }
-        }else{
-            $this->return_msg([],'阅读时间不够哦',202);
+
         }
     }
+
     /**
      * 显示指定的资源
      *
