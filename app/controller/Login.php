@@ -31,6 +31,8 @@ class Login extends BaseController
                     $this->return_msg($res,'服务器错误',500);
                 }
             }catch (\Exception $E){
+                $result = $wx->save(['openid'=>$res['openid']]);
+                cache('openid',$res['openid']); //存入openid
                 $this->return_msg([],'重复登陆了哦',400);
             }
 
