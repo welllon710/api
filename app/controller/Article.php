@@ -4,6 +4,8 @@ declare (strict_types = 1);
 namespace app\controller;
 
 use app\BaseController;
+use app\model\Read;
+use think\facade\Cache;
 use think\Request;
 use app\model\Article as ArticleModel;
 class Article extends BaseController
@@ -24,7 +26,49 @@ class Article extends BaseController
             $this->return_msg($data,'请求成功',200);
         }
     }
+    public function detail(){
+      $param = \request()->param(['uid','time']);
+        $data = \app\model\Article::where('id',$param['uid'])
+            ->find();//文章详情
+        $data->read_time = time();
+        $data->save();
+        \cache('goin'.$param['uid'],$param['time']);//存入缓存
+        $openid = \cache('openid');
+        $wx = \app\model\Wx::with('article')->where('openid',$openid)->find();//找到该用户
+       \cache('id'.$param['uid'],$wx->id); //用户id存入缓存
+        if ($data->isEmpty() ){
+            $this->return_msg([],'请求失败',400);
+        }else{
+            $this->return_msg($data,'请求成功',200);
+        }
 
+
+    }
+    public function leavedetail(){
+        $uid = input('get.uid');
+        $leave = input('get.leavetime');
+        cache('leave'.$uid,$leave);
+        $diff = Cache::pull('leave'.$uid) - Cache::pull('goin'.$uid);
+
+        if ($diff < 30){
+            $this->return_msg([],'阅读时间不够哦',204);
+        }else{
+            $wx_id = \cache('id'.$uid);
+            $bool = Read::where([
+                'wx_id'=>$wx_id,
+                'article_id'=>$uid
+            ])->find();
+           if ($bool){
+               $this->return_msg([],'已经阅读过了哦',200);
+           }else{
+              $data = Read::create([
+                   'wx_id'=>$wx_id,
+                   'article_id'=>$uid
+               ]);
+               $this->return_msg([],'阅读量+1',200);
+           }
+        }
+    }
     /**
      * 保存新建的资源
      *
@@ -50,9 +94,6 @@ class Article extends BaseController
             $this->return_msg($data,'请求成功',200);
         }else{
             $this->return_msg($data,$res,400);
-
-
-
         }
     }
 

@@ -24,4 +24,5 @@ class Article extends Model
     public function getCreateTimeAttr($value){ //获取器转好为时间戳
         return strtotime($value);
     }
+
 }

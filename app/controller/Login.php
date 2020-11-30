@@ -24,13 +24,14 @@ class Login extends BaseController
         }else{
             try {
                 $result = $wx->save(['openid'=>$res['openid']]);
+                cache('openid',$res['openid']); //存入openid
                 if ($result){
-                    $this->return_msg($res,'请求成功',400);
+                    $this->return_msg($res,'请求成功',200);
                 }else{
                     $this->return_msg($res,'服务器错误',500);
                 }
             }catch (\Exception $E){
-                $this->return_msg($res,'请求成功',400);
+                $this->return_msg([],'重复登陆了哦',400);
             }
 
 

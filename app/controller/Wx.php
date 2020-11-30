@@ -15,8 +15,9 @@ class Wx extends BaseController
      */
     public function index()
     {
-        $code = input('get.code');
-        $openid =  \app\model\Wx::where('openid',$code)->value('openid');
+       // $code = input('get.code');
+        $openid = cache('openid');
+        $openid =  \app\model\Wx::where('openid',$openid)->value('openid');
         $argc = \app\model\Article::where('openid',$openid)->field(['id','title','tags','create_time'])
             ->order('create_time','desc')
             ->select();
@@ -57,17 +58,15 @@ class Wx extends BaseController
      */
     public function read($id)
     {
-        $code = $id;
-         $data = \app\model\Article::where([
-            ['openid','=',$code],
-            ['is_read','=','1']
-        ])->field(['id','title','tags','create_time'])->select();
-         if ($data->isEmpty()){
-             $this->return_msg([],'请求失败',400);
-         }else{
-             $this->return_msg($data,'请求成功',200);
-         }
-
+         $openid = cache('openid');
+          $read = \app\model\Wx::where('openid',$openid)
+         ->find();
+        $user = $read->article->visible(['id','title','tags','read_time']);
+        if ($user->isEmpty()){
+            $this->return_msg([],'请求失败',400);
+        }else{
+            $this->return_msg($user,'请求成功',200);
+        }
     }
 
     /**
