@@ -41,12 +41,13 @@ class Wx extends BaseController
         $data['user']['gender'] = $data['user']['gender'] === 1?'男':'女';
         $openid = $data['user']['openid'];
         unset( $data['user']['openid']);
-         $res = \app\model\Wx::where('openid',$openid)->save($data['user']);
+        $res = \app\model\Wx::where('openid',$openid)->update($data['user']);
+        $wx = \app\model\Wx::where('openid',$openid)
+            ->field(['id','nickname','gender','avatarurl','country','create_time'])->find();
         if ($res === 1){
-            $this->return_msg([],'登录成功',200);
+            $this->return_msg($wx,'登录成功',200);
         }else{
-            $this->return_msg([],$res,400);
-
+            $this->return_msg($wx,'欢迎再次登录',200);
         }
     }
 

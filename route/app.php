@@ -32,7 +32,8 @@ Route::group('api',function (){
     Route::rule('login','Login/index','post');
     //小程序用户
     Route::resource('wx','Wx');
-
+    //评论表
+    Route::resource('comment','Comment');
    // Route::rule('wxs/reads','Wx/reads','get');
 
 });
