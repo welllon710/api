@@ -15,23 +15,11 @@ class Comment extends BaseController
      */
     public function index()
     {
-//        CommentModel::chunk(5, function ($users) {
-//           foreach ($users as $k=>$v){
-//               if ($v['parent_id'] ==)
-//           }
-//        });
-        $data = CommentModel::paginate(5);
+
 
 
     }
-    public function dg($comment,$parent = 0){
-        $data = [];
-        foreach ($comment as $k=>$v){
-            if ($v['parent_id'] == $parent){
 
-            }
-        }
-    }
     /**
      * 保存新建的资源
      *
@@ -44,9 +32,10 @@ class Comment extends BaseController
             $data = [
                 'wx_id'=>input('post.wxid'),
                 'article_id'=>input('post.uid'),
-                'content'=>input('post.value'),
+                'content'=>base64_encode(input('post.value')),
                 'parent_id'=>input('post.parent_id',0)
             ];
+            $data['nickname'] = $data['wx_id'];
             $comment = new \app\model\Comment();
             $bool = $comment->add($data);
             if ($bool == 1){
@@ -54,8 +43,6 @@ class Comment extends BaseController
             }else{
                 $this->return_msg([],$bool,400);
             }
-
-
 
     }
 
@@ -73,7 +60,6 @@ class Comment extends BaseController
       }else{
           $this->return_msg($data,'请求成功',200);
       }
-
     }
     public function getcomment($article_id,$comment_id = 0){ //文章id , 回复的父评论的id
         $result = [];
@@ -85,6 +71,8 @@ class Comment extends BaseController
         }
         foreach ($arr as $k=>$v){
             $v['child'] = $this->getcomment($article_id,$v['id']);
+            $v['content'] = base64_decode( $v['content']);
+          //  $v['nickname'] = base64_decode($v['nickname']);
             $result[] = $v->toArray();
         }
        return  $result;

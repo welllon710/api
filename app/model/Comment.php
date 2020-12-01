@@ -20,7 +20,5 @@ class Comment extends Model
             return '添加失败';
         }
     }
-    public function getWxIdAttr($value){
-      return Wx::find($value)->value('nickname');
-    }
+
 }

@@ -16,6 +16,7 @@ class Comment extends Validate
     protected $rule = [
         'wx_id'=>'require',
         'article_id'=>'require',
+        'nickname'=>'require',
         'content'=>'require',
         'parent_id'=>'require'
     ];
@@ -26,8 +27,10 @@ class Comment extends Validate
      *
      * @var array
      */
-    protected $message = [];
+    protected $message = [
+        'wx_id.require'=>'你还没有登录哦'
+    ];
     protected $scene = [
-        'add'=>['wx_id','article_id','content','parent_id']
+        'add'=>['wx_id','nickname','article_id','content','parent_id']
     ];
 }
