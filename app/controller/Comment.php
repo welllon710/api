@@ -50,7 +50,7 @@ class Comment extends BaseController
         $data = [
           'article_id'=>input('post.obj.uid'),
           'parent_id'=>input('post.obj.wid'),
-         //'parent_name'=>base64_encode(input('post.obj.pname')),
+           'parent_name'=>base64_encode(input('post.obj.pname')),
 
           'nickname'=>base64_encode(input('post.obj.myname')),
           'wx_id'=>input('post.obj.myid'),
@@ -90,9 +90,7 @@ class Comment extends BaseController
             $v['child'] = $this->getcomment($article_id,$v['id']);
             $v['content'] = base64_decode( $v['content']);
             $v['nickname'] = base64_decode($v['nickname']);
-            $v->append(['parent_name']);
-            $v['parent_name'] = $v['parent_id'];
-         //   $v['parent_name'] = base64_decode($v['parent_name']);
+            $v['parent_name'] = base64_decode($v['parent_name']);
             $result[] = $v->toArray();
         }
        return  $result;

@@ -32,7 +32,5 @@ class Comment extends Model
             return '添加失败';
         }
     }
-    public function getParentNameAttr($value){
-       return Wx::where('id',$value)->value('nickname');
-    }
+
 }
