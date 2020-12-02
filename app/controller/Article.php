@@ -19,7 +19,6 @@ class Article extends BaseController
     public function index()
     {
         $data = \app\model\Article::field($this->field)->paginate($this->page_size,false);
-
         if ($data->isEmpty()){
             $this->return_msg([],'请求失败',400);
         }else{
@@ -49,7 +48,6 @@ class Article extends BaseController
         $leave = input('get.leavetime');
         cache('leave'.$uid,$leave);
         $diff = Cache::pull('leave'.$uid) - Cache::pull('goin'.$uid);
-
         if ($diff < 30){
             $this->return_msg([],'阅读时间不够哦',204);
         }else{

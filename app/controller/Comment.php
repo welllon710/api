@@ -30,12 +30,13 @@ class Comment extends BaseController
     {
 
             $data = [
-                'wx_id'=>input('post.wxid'),
+                'wx_id'=>input('post.myid'),
+                'nickname'=>base64_encode(input('post.myname')),
                 'article_id'=>input('post.uid'),
                 'content'=>base64_encode(input('post.value')),
                 'parent_id'=>input('post.parent_id',0)
             ];
-            $data['nickname'] = $data['wx_id'];
+           // $data['nickname'] = $data['wx_id'];
             $comment = new \app\model\Comment();
             $bool = $comment->add($data);
             if ($bool == 1){
@@ -45,7 +46,26 @@ class Comment extends BaseController
             }
 
     }
+    public function reply(){
+        $data = [
+          'article_id'=>input('post.obj.uid'),
+          'parent_id'=>input('post.obj.wid'),
+         //'parent_name'=>base64_encode(input('post.obj.pname')),
 
+          'nickname'=>base64_encode(input('post.obj.myname')),
+          'wx_id'=>input('post.obj.myid'),
+
+          'comment_id'=>input('post.obj.cid'),
+          'content'=>base64_encode(input('post.obj.value'))
+        ];
+        $comment = new \app\model\Comment();
+        $bool = $comment->reply($data);
+        if ($bool == 1){
+            $this->return_msg([],'回复成功',200);
+        }else{
+            $this->return_msg([],$bool,400);
+        }
+    }
     /**
      * 显示指定的资源
      *
@@ -63,16 +83,16 @@ class Comment extends BaseController
     }
     public function getcomment($article_id,$comment_id = 0){ //文章id , 回复的父评论的id
         $result = [];
-        $arr = CommentModel::where('article_id',$article_id)->where('comment_id',$comment_id)
-            ->order('create_time','desc')->select();
-        if ($arr->isEmpty()){
-           //$this->return_msg([],'文章id不存在',404);
-            return  array();
-        }
-        foreach ($arr as $k=>$v){
+        foreach (CommentModel::where([
+            'article_id'=>$article_id,
+            'comment_id'=>$comment_id
+        ])->cursor() as $v ){
             $v['child'] = $this->getcomment($article_id,$v['id']);
             $v['content'] = base64_decode( $v['content']);
-          //  $v['nickname'] = base64_decode($v['nickname']);
+            $v['nickname'] = base64_decode($v['nickname']);
+            $v->append(['parent_name']);
+            $v['parent_name'] = $v['parent_id'];
+         //   $v['parent_name'] = base64_decode($v['parent_name']);
             $result[] = $v->toArray();
         }
        return  $result;

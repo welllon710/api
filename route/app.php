@@ -34,6 +34,8 @@ Route::group('api',function (){
     Route::resource('wx','Wx');
     //评论表
     Route::resource('comment','Comment');
+    //回复评论
+    Route::rule('reply','Comment/reply','post');
    // Route::rule('wxs/reads','Wx/reads','get');
 
 });

@@ -18,7 +18,9 @@ class Comment extends Validate
         'article_id'=>'require',
         'nickname'=>'require',
         'content'=>'require',
-        'parent_id'=>'require'
+        'parent_id'=>'require',
+        'comment_id'=>'require',
+       // 'parent_name'=>'require'
     ];
 
     /**
@@ -31,6 +33,7 @@ class Comment extends Validate
         'wx_id.require'=>'你还没有登录哦'
     ];
     protected $scene = [
-        'add'=>['wx_id','nickname','article_id','content','parent_id']
+        'add'=>['wx_id','nickname','article_id','content','parent_id'],
+        'reply'=>['wx_id','nickname','article_id','content','parent_id','comment_id'],
     ];
 }

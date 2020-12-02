@@ -20,5 +20,19 @@ class Comment extends Model
             return '添加失败';
         }
     }
-
+    public function reply($data){
+        $validate = new CommentValidate();
+        if(!$validate->scene('reply')->check($data)){
+            return $validate->getError();
+        }
+        $res = $this->save($data);
+        if ($res){
+            return 1;
+        }else{
+            return '添加失败';
+        }
+    }
+    public function getParentNameAttr($value){
+       return Wx::where('id',$value)->value('nickname');
+    }
 }
