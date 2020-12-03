@@ -58,6 +58,7 @@ class Comment extends BaseController
           'comment_id'=>input('post.obj.cid'),
           'content'=>base64_encode(input('post.obj.value'))
         ];
+
         $comment = new \app\model\Comment();
         $bool = $comment->reply($data);
         if ($bool == 1){

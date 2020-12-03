@@ -24,5 +24,10 @@ class Article extends Model
     public function getCreateTimeAttr($value){ //获取器转好为时间戳
         return strtotime($value);
     }
-
+    public function setCateIdAttr($value){
+        return Cate::where('catename',$value)->value('id');
+    }
+    public function setOpenidAttr($value){
+        return  Wx::where('id',$value)->value('openid');
+    }
 }

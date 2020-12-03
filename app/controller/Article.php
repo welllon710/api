@@ -10,7 +10,7 @@ use think\Request;
 use app\model\Article as ArticleModel;
 class Article extends BaseController
 {
-    protected $field = ['id','title','desc','tags','content','is_top'];
+    protected $field = ['id','title','desc','tags','content','is_top','create_time'];
     /**
      * 显示资源列表
      *
@@ -82,10 +82,12 @@ class Article extends BaseController
             'desc'=>input('post.desc'),
             'tags'=>input('post.tags'),
             'content'=>input('post.content'),
-            'is_top'=>input('is_top')?'1':'0',
-            'cate_id'=>input('cate_id')
+            'is_top'=>input('post.is_top')?'1':'0',
+            'cate_id'=>input('post.cate_id'),
+            'openid'=>input('post.myid')
         ];
-       $data['cate_id'] = \app\model\Cate::where('catename',$data['cate_id'])->value('id');
+        // $data['cate_id'] = \app\model\Cate::where('catename',$data['cate_id'])->value('id');
+        // $data['myid'] = \app\model\Wx::where('id',$data[''])
         $article = new ArticleModel();
         $res = $article->add($data);
         if ($res === 1){

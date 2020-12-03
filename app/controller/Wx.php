@@ -60,10 +60,12 @@ class Wx extends BaseController
     public function read($id)
     {
          $openid = cache('openid');
-          $read = \app\model\Wx::where('openid',$openid)
+         $read = \app\model\Wx::where('openid',$openid)
          ->find();
-        $user = $read->article->visible(['id','title','tags','read_time']);
-        if ($user->isEmpty()){
+        $user = $read->article->visible(['id','title','tags','read_time'])->toArray();
+       // $user = $user->order('read_time','desc');
+        //dd($user->toArray());
+        if (empty($user)){
             $this->return_msg([],'请求失败',400);
         }else{
             $this->return_msg($user,'请求成功',200);
