@@ -92,6 +92,8 @@ class Comment extends BaseController
             $v['content'] = base64_decode( $v['content']);
             $v['nickname'] = base64_decode($v['nickname']);
             $v['parent_name'] = base64_decode($v['parent_name']);
+            $v->append(['avatar']);
+            $v['avatar'] = $v['wx_id'];
             $result[] = $v->toArray();
         }
        return  $result;

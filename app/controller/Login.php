@@ -9,7 +9,6 @@ use app\BaseController;
 class Login extends BaseController
 {
     public function index(){
-
         $Code = input('post.code');
         $Appid = 'wx5c11b99fea88a1d8';
         $AppSecret = 'bb8fb6576b53e40e5f7e7ec69217356e';
@@ -23,15 +22,12 @@ class Login extends BaseController
         }else{
             try {
                 $result = $wx->save(['openid'=>$res['openid']]);
-                cache('openid',$res['openid']); //存入openid
                 if ($result){
                     $this->return_msg($res,'请求成功',200);
                 }else{
                     $this->return_msg($res,'服务器错误',500);
                 }
             }catch (\Exception $E){
-               // $result = $wx->save(['openid'=>$res['openid']]);
-                cache('openid',$res['openid']); //存入openid
                 $this->return_msg($res,'重复登陆了哦',400);
             }
 

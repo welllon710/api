@@ -16,8 +16,7 @@ Route::group('api',function (){
    Route::rule('code','Code/get_code','get');
    //注册
    Route::rule('register','User/register','post');
-   //登录
- //   Route::rule('login','User/login','post');
+
     //获取分类
     Route::rule('cate','Cate/index','get');
     //文章
@@ -31,11 +30,14 @@ Route::group('api',function (){
     //小程序登录
     Route::rule('login','Login/index','post');
     //小程序用户
-    Route::resource('wx','Wx');
+    //home
+    Route::rule('wx/pub','Wx/pub','post'); //我的发布
+    Route::rule('wx/read','Wx/read','post'); //我的阅读
+    Route::rule('wx/save','Wx/save','post'); //写入登录信息
     //评论表
     Route::resource('comment','Comment');
     //回复评论
     Route::rule('reply','Comment/reply','post');
-   // Route::rule('wxs/reads','Wx/reads','get');
+
 
 });
