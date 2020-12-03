@@ -11,6 +11,7 @@ use app\model\Article as ArticleModel;
 class Article extends BaseController
 {
     protected $field = ['id','title','desc','tags','content','is_top','create_time'];
+
     /**
      * 显示资源列表
      *
@@ -26,15 +27,14 @@ class Article extends BaseController
         }
     }
     public function detail(){
-      $param = \request()->param(['uid','time']);
+      $param = \request()->param(['uid','time','openid']);
         $data = \app\model\Article::where('id',$param['uid'])
             ->find();//文章详情
         $data->read_time = time();
         $data->save();
         \cache('goin'.$param['uid'],$param['time']);//存入缓存
-        $openid = \cache('openid');
-        $wx = \app\model\Wx::with('article')->where('openid',$openid)->find();//找到该用户
-       \cache('id'.$param['uid'],$wx->id); //用户id存入缓存
+        $wx_id = \app\model\Wx::with('article')->where('openid',$param['openid'])->value('id');//找到该用户
+       \cache('id'.$param['uid'],$wx_id); //用户id存入缓存
         if ($data->isEmpty() ){
             $this->return_msg([],'请求失败',400);
         }else{
@@ -48,8 +48,8 @@ class Article extends BaseController
         $leave = input('get.leavetime');
         cache('leave'.$uid,$leave);
         $diff = Cache::pull('leave'.$uid) - Cache::pull('goin'.$uid);
-        if ($diff < 30){
-            $this->return_msg([],'阅读时间不够哦',204);
+        if ($diff <= 30){
+          $this->return_msg([],'再多读会吧~',204);
         }else{
             $wx_id = \cache('id'.$uid);
             $bool = Read::where([
@@ -57,13 +57,13 @@ class Article extends BaseController
                 'article_id'=>$uid
             ])->find();
            if ($bool){
-               $this->return_msg([],'已经阅读过了哦',200);
+               $this->return_msg([],'温故而知新',200);
            }else{
               $data = Read::create([
                    'wx_id'=>$wx_id,
                    'article_id'=>$uid
                ]);
-               $this->return_msg([],'阅读量+1',200);
+               $this->return_msg([],'阅读量+1！',200);
            }
         }
     }
@@ -93,7 +93,7 @@ class Article extends BaseController
         if ($res === 1){
             $this->return_msg($data,'请求成功',200);
         }else{
-            $this->return_msg($data,$res,400);
+            $this->return_msg($data,'请求失败',400);
         }
     }
 

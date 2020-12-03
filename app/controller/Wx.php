@@ -18,7 +18,7 @@ class Wx extends BaseController
         if ($argc->isEmpty()){
             $this->return_msg([],'空空如也呢!',400);
         }else{
-            $this->return_msg($openid,'请求成功',200);
+            $this->return_msg($argc,'请求成功',200);
         }
     }
 
