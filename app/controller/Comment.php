@@ -87,7 +87,7 @@ class Comment extends BaseController
         foreach (CommentModel::where([
             'article_id'=>$article_id,
             'comment_id'=>$comment_id
-        ])->cursor() as $v ){
+        ])->order('create_time','desc')->cursor() as $v ){
             $v['child'] = $this->getcomment($article_id,$v['id']);
             $v['content'] = base64_decode( $v['content']);
             $v['nickname'] = base64_decode($v['nickname']);

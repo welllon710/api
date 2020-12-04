@@ -4,6 +4,7 @@ declare (strict_types = 1);
 namespace app\controller;
 
 use app\BaseController;
+use think\model\Relation;
 use think\Request;
 
 class Wx extends BaseController
@@ -49,10 +50,12 @@ class Wx extends BaseController
     {
          $openid = input('post.code');
          $read = \app\model\Wx::where('openid',$openid)->find();
-         $user = $read->article->visible(['id','title','tags','read_time']);
-        if (empty($user)){
+         $user = $read->article->visible(['id','title','tags','read_time']);//？？？时间排序
+
+        if ($user->isEmpty()){
             $this->return_msg([],'您还没有阅读呢,赶快去阅读吧',400);
         }else{
+
             $this->return_msg($user,'请求成功',200);
         }
     }

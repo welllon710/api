@@ -103,10 +103,11 @@ class Article extends BaseController
      * @param  int  $id
      * @return \think\Response
      */
-    public function read($id)
+
+    public function read($id) //返回分类下的文章
     {
         $cate = \app\model\Cate::with(['article'])->find($id);
-        $data = $cate->article()->field($this->field)->paginate($this->page_size,false);
+        $data = $cate->article()->field($this->field)->order('create_time','desc')->paginate($this->page_size,false);
         if ($data->isEmpty()){
             $this->return_msg([],'请求失败',400);
         }else{
