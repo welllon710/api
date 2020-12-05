@@ -4,6 +4,7 @@ declare (strict_types = 1);
 namespace app\controller;
 
 use app\BaseController;
+use Symfony\Component\VarDumper\Dumper\DataDumperInterface;
 use think\model\Relation;
 use think\Request;
 
@@ -23,7 +24,6 @@ class Wx extends BaseController
         }
     }
 
-
     /**
      * 保存新建的资源
      *
@@ -33,16 +33,23 @@ class Wx extends BaseController
     public function save(Request $request)
     {
         $data = $request->param();
+        $data['user']['nickname'] = base64_encode( $data['user']['nickname']);
         $data['user']['gender'] = $data['user']['gender'] === 1?'男':'女';
         $openid = $data['user']['openid'];
         unset( $data['user']['openid']);
-        $res = \app\model\Wx::where('openid',$openid)->update($data['user']);
+        $res = \app\model\Wx::where('openid',$openid)->find();//判断是否再次登录
+        if ($res == null){
+            $user =  \app\model\Wx::onlyTrashed()->where('openid',$openid)
+                ->field(['id','nickname','gender','avatarurl','country','create_time'])
+                ->find();
+            $result =  $user->restore();
+            $this->return_msg($user,'欢迎再次登录~',200);
+        }
+        $update = \app\model\Wx::where('openid',$openid)->update($data['user']);
         $wx = \app\model\Wx::where('openid',$openid)
             ->field(['id','nickname','gender','avatarurl','country','create_time'])->find();
-        if ($res === 1){
+        if ($update === 1){
             $this->return_msg($wx,'登录成功',200);
-        }else{
-            $this->return_msg($wx,'欢迎再次登录',200);
         }
     }
 
@@ -60,4 +67,14 @@ class Wx extends BaseController
         }
     }
 
+    public function delete($id)
+    {
+       $data = \app\model\Wx::find($id)->delete();
+        //$data = \app\model\Wx::find($id);
+       if ($data){
+           $this->return_msg([],'退出成功',200);
+       }else{
+           $this->return_msg([],'退出失败',400);
+       }
+    }
 }

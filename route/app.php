@@ -34,6 +34,7 @@ Route::group('api',function (){
     Route::rule('wx/pub','Wx/pub','post'); //我的发布
     Route::rule('wx/read','Wx/read','post'); //我的阅读
     Route::rule('wx/save','Wx/save','post'); //写入登录信息
+    Route::rule('wx/delete/:id','Wx/delete','delete');//退出小程序
     //评论表
     Route::resource('comment','Comment');
     //回复评论

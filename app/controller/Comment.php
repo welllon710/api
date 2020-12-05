@@ -31,12 +31,11 @@ class Comment extends BaseController
 
             $data = [
                 'wx_id'=>input('post.myid'),
-                'nickname'=>base64_encode(input('post.myname')),
+                'nickname'=>base64_encode(input('post.myname','微信用户')),
                 'article_id'=>input('post.uid'),
                 'content'=>base64_encode(input('post.value')),
                 'parent_id'=>input('post.parent_id',0)
             ];
-           // $data['nickname'] = $data['wx_id'];
             $comment = new \app\model\Comment();
             $bool = $comment->add($data);
             if ($bool == 1){
@@ -52,7 +51,7 @@ class Comment extends BaseController
           'parent_id'=>input('post.obj.wid'),
            'parent_name'=>base64_encode(input('post.obj.pname')),
 
-          'nickname'=>base64_encode(input('post.obj.myname')),
+          'nickname'=>base64_encode(input('post.obj.myname','微信用户')),
           'wx_id'=>input('post.obj.myid'),
 
           'comment_id'=>input('post.obj.cid'),
