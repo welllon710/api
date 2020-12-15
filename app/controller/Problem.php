@@ -13,11 +13,11 @@ class Problem extends BaseController
      *
      * @return \think\Response
      */
-    protected $field = ['id','problem','answer','topic_id'];
+    protected $field = ['id','problem','answer','topic_id','analysis'];
     public function index()
     {
         $problem = new \app\model\Problem();
-        $data =  $problem->field(['id','problem','answer','topic_id'])
+        $data =  $problem->field(['id','problem','answer','topic_id','analysis'])
             ->paginate($this->page_size,false);
          if ($data->isEmpty()){
              $this->return_msg([],'请求失败',400);

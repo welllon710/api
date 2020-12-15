@@ -36,7 +36,7 @@ class Wx extends BaseController
         $data['user']['gender'] = $data['user']['gender'] === 1?'男':'女';
         $openid = $data['user']['openid'];
         unset( $data['user']['openid']);
-        $res = \app\model\Wx::where('openid',$openid)->update($data['user']);
+        $res = \app\model\Wx::select();
         $wx = \app\model\Wx::where('openid',$openid)
             ->field(['id','nickname','gender','avatarurl','country','create_time'])->find();
         if ($res === 1){
@@ -59,5 +59,12 @@ class Wx extends BaseController
             $this->return_msg($user,'请求成功',200);
         }
     }
-
+//    public function delete($id){
+//       $res =  \app\model\Wx::withTrashed()->find($id);
+//       if ($res){
+//           $this->return_msg([],'退出成功',200);
+//       }else{
+//           $this->return_msg([],'退出失败',400);
+//       }
+//    }
 }
